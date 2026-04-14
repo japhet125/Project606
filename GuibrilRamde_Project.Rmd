@@ -16,8 +16,18 @@ load_data <- read_csv(data_url)
 
 clean_data <- load_data |>
   clean_names()
-glimpse(clean_data)
-dim(clean_data)
+
+
+clean_data2 <- clean_data |>
+  filter(
+    calories_consumed > 0,
+    protein_g > 0,
+    carbs_g > 0,
+    fat_g > 0
+  ) |>
+  drop_na()
+glimpse(clean_data2)
+dim(clean_data2)
 ```
 
 
@@ -25,13 +35,13 @@ dim(clean_data)
 
 **You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
 
-#Answer: My research question is: Which lifestyle factors, such as calorie intake, sleep, stress, caffeine intake, steps, and workout intensity, are most strongly associated with weight change?
+Answer: My research question is: Which lifestyle factors (calorie intake, sleep, stress, caffeine, physical activity, and workout intensity) are significantly associated with weight change?
 
 
 ### Cases 
 
 **What are the cases, and how many are there?**
-#Answer:The cases are the individual observations (rows) in the dataset, where each row represents one tracked lifestyle and weight record. There are 55,000 cases in the dataset.
+Answer:The cases are the individual observations (rows) in the dataset, where each row represents one tracked lifestyle and weight record. There are 55,000 initialy but after cleaning and removing NA values we have 52,236 cases in the dataset.
 
 
 
@@ -39,57 +49,72 @@ dim(clean_data)
 
 **Describe the method of data collection.**
 
-#Answer: This dataset was obtained from Kaggle as a secondary data source. The file was downloaded as a CSV and then loaded into R using a GitHub raw link. Based on the dataset description, it appears to contain recorded lifestyle and biometric variables related to weight tracking. However, the original data collection and sampling procedures are not fully documented, so the results should be interpreted with caution.
+Answer: This dataset was obtained from Kaggle as a secondary data source. The file was downloaded as a CSV and then loaded into R using a GitHub raw link. Based on the dataset description, it appears to contain recorded lifestyle and biometric variables related to weight tracking. However, the original data collection and sampling procedures are not fully documented, so the results should be interpreted with caution.
 
 ### Type of study 
 
 **What type of study is this (observational/experiment)?**
-#Answer: This is an observational study because the dataset records lifestyle and health-related variables without assigning treatments or manipulating conditions.
+Answer: This is an observational study because the dataset records lifestyle and health-related variables without assigning treatments or manipulating conditions.
 
 
 ### Data Source 
 
 **If you collected the data, state self-collected. If not, provide a citation/link.**
 
-#Answer: Lifestyle Weight Tracker Dataset. The link:https://www.kaggle.com/datasets/waddahali/lifestyle-weight-tracker
+Answer: Lifestyle Weight Tracker Dataset. The link:https://www.kaggle.com/datasets/waddahali/lifestyle-weight-tracker
 
 
 ### Describe your variables?
 
 **Are they quantitative or qualitative**
-#Answer: the dataset includes both variables quantitative and qualitative:
-#qualitative variables are: 
-#gende,
-#workout_type, 
-#workout_intensity 
-#quantitative varibales are:
-#age,
-#height_cm,
-#initial_weight_kg,
-#sleep_hours,
-#caffeine_mg,
-#calories_consumed,
-#protein_g,
-#carbs_g,
-#fat_g,
-#steps,
-#temp_c,
-#weight_change,
-#current_weight_kg
+Answer: the dataset includes both variables quantitative and qualitative:
+categorical (qualitative) variables are: 
+- gender,
+- workout_type, 
+- workout_intensity 
+numerical (quantitative) varibales are:
+- age,
+- height_cm,
+- initial_weight_kg,
+- sleep_hours,
+- caffeine_mg,
+- calories_consumed,
+- protein_g,
+- carbs_g,
+- fat_g,
+- steps,
+- temp_c,
+- weight_change,
+- current_weight_kg
 
 **If you are are running a regression or similar model, which one is your dependent variable?**
-#Answer: The dependent variable is Weight_change
+Answer: The response variable is `weight_change`, which is a numerical (continuous) variable representing the change in weight over time.
 
 ### Relevant summary statistics 
 
 **Provide summary statistics for each the variables. Also include appropriate visualizations related to your research question (e.g. scatter plot, boxplots, etc). This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
 
 ```{r}
-  summary(clean_data)
+  summary(clean_data2)
+```
+Interpretation: Some variables contain unrealistic negative values and missing values, indicating potential data quality issues which we cleaned in the data preparation before analysis.
+
+**Outliers**
+```{r}
+ggplot(clean_data2, aes(y = calories_consumed)) +
+  geom_boxplot() +
+  labs(title = "Calories Consumed")
+```
+```{r}
+ggplot(clean_data2, aes(x = weight_change)) +
+  geom_histogram(bins = 30, fill = "blue") +
+  labs(title = "Distribution of Weight Change")
 ```
 
+Interpretation: the distribution of weight change appears approximately symmetric and bell-shaped, we have a normal distribution.
+
 ```{r}
-ggplot(clean_data, aes(x = workout_type, y = weight_change)) +
+ggplot(clean_data2, aes(x = workout_type, y = weight_change)) +
   geom_boxplot() +
   labs(
     title = "Work Out Type vs Weight Change",
@@ -100,8 +125,8 @@ ggplot(clean_data, aes(x = workout_type, y = weight_change)) +
 
 
 ```{r}
-ggplot(clean_data, aes(x = stress_level, y = weight_change)) +
-  geom_point() +
+ggplot(clean_data2, aes(x = stress_level, y = weight_change)) +
+  geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", se = FALSE) +
   labs(
     title = "Stress Level Vs Weight Change",
@@ -112,6 +137,17 @@ ggplot(clean_data, aes(x = stress_level, y = weight_change)) +
 ```
 
 
+```{r}
+ggplot(clean_data2, aes(x = sleep_hours, y = weight_change)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Sleep Hours Vs Weight Change",
+    x = "Sleep Hours",
+    y = "Weight Change"
+  ) +
+  theme_minimal()
+```
 
 
 
