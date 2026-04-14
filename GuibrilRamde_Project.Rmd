@@ -1,0 +1,121 @@
+---
+title: "Project DATA 606 Data Proposal"
+author: "Guibril Ramde"
+date: "2026-04-12"
+output: html_document
+---
+
+### Data Preparation
+
+```{r setup, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+# load data
+library(tidyverse)
+library(janitor)
+data_url <- "https://raw.githubusercontent.com/japhet125/Project606/refs/heads/main/lifestyle_weight_tracker.csv"
+load_data <- read_csv(data_url)
+
+clean_data <- load_data |>
+  clean_names()
+glimpse(clean_data)
+dim(clean_data)
+```
+
+
+### Research question 
+
+**You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
+
+#Answer: My research question is: Which lifestyle factors, such as calorie intake, sleep, stress, caffeine intake, steps, and workout intensity, are most strongly associated with weight change?
+
+
+### Cases 
+
+**What are the cases, and how many are there?**
+#Answer:The cases are the individual observations (rows) in the dataset, where each row represents one tracked lifestyle and weight record. There are 55,000 cases in the dataset.
+
+
+
+### Data collection 
+
+**Describe the method of data collection.**
+
+#Answer: This dataset was obtained from Kaggle as a secondary data source. The file was downloaded as a CSV and then loaded into R using a GitHub raw link. Based on the dataset description, it appears to contain recorded lifestyle and biometric variables related to weight tracking. However, the original data collection and sampling procedures are not fully documented, so the results should be interpreted with caution.
+
+### Type of study 
+
+**What type of study is this (observational/experiment)?**
+#Answer: This is an observational study because the dataset records lifestyle and health-related variables without assigning treatments or manipulating conditions.
+
+
+### Data Source 
+
+**If you collected the data, state self-collected. If not, provide a citation/link.**
+
+#Answer: Lifestyle Weight Tracker Dataset. The link:https://www.kaggle.com/datasets/waddahali/lifestyle-weight-tracker
+
+
+### Describe your variables?
+
+**Are they quantitative or qualitative**
+#Answer: the dataset includes both variables quantitative and qualitative:
+#qualitative variables are: 
+#gende,
+#workout_type, 
+#workout_intensity 
+#quantitative varibales are:
+#age,
+#height_cm,
+#initial_weight_kg,
+#sleep_hours,
+#caffeine_mg,
+#calories_consumed,
+#protein_g,
+#carbs_g,
+#fat_g,
+#steps,
+#temp_c,
+#weight_change,
+#current_weight_kg
+
+**If you are are running a regression or similar model, which one is your dependent variable?**
+#Answer: The dependent variable is Weight_change
+
+### Relevant summary statistics 
+
+**Provide summary statistics for each the variables. Also include appropriate visualizations related to your research question (e.g. scatter plot, boxplots, etc). This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
+
+```{r}
+  summary(clean_data)
+```
+
+```{r}
+ggplot(clean_data, aes(x = workout_type, y = weight_change)) +
+  geom_boxplot() +
+  labs(
+    title = "Work Out Type vs Weight Change",
+    x = "Workout Type",
+    y = "Weight Change"
+  )
+```
+
+
+```{r}
+ggplot(clean_data, aes(x = stress_level, y = weight_change)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Stress Level Vs Weight Change",
+    x = "Stress Level",
+    y = "Weight Change"
+  ) +
+  theme_minimal()
+```
+
+
+
+
+
+
+
+
+
