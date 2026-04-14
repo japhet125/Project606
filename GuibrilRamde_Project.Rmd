@@ -26,6 +26,20 @@ clean_data2 <- clean_data |>
     fat_g > 0
   ) |>
   drop_na()
+clean_data2 <- clean_data2 |>
+  mutate(
+    height_m = height_cm / 100,
+    bmi = current_weight_kg / (height_m^2)
+  )
+
+clean_data2 |>
+  group_by(workout_intensity) |>
+  summarise(
+    mean_weight_change = mean(weight_change),
+    sd_weight_change = sd(weight_change),
+    n = n()
+  )
+
 glimpse(clean_data2)
 dim(clean_data2)
 ```
