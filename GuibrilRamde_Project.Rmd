@@ -2,7 +2,18 @@
 title: "Project DATA 606 Data Proposal"
 author: "Guibril Ramde"
 date: "2026-04-12"
-output: html_document
+output:
+  pdf_document: default
+  html_document:
+    includes:
+      in_header: header.html
+    css: ./lab.css
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 ### Data Preparation
@@ -102,14 +113,22 @@ numerical (quantitative) varibales are:
 - current_weight_kg
 
 **If you are are running a regression or similar model, which one is your dependent variable?**
-Answer: The response variable is `weight_change`, which is a numerical (continuous) variable representing the change in weight over time.
+Answer: The dependent variable is `weight_change`, which is a numerical (continuous) variable representing the change in weight over time.
 
 ### Relevant summary statistics 
 
-**Provide summary statistics for each the variables. Also include appropriate visualizations related to your research question (e.g. scatter plot, boxplots, etc). This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
+**Provide summary statistics for each of the variables. Also include appropriate visualizations related to your research question (e.g. scatter plot, boxplots, etc). This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
 
 ```{r}
-  summary(clean_data2)
+ clean_data2 |>
+  summarise(
+    mean_weight_change = mean(weight_change),
+    median_weight_change = median(weight_change),
+    sd_weight_change = sd(weight_change),
+    mean_sleep = mean(sleep_hours),
+    mean_stress = mean(stress_level),
+    mean_calories = mean(calories_consumed)
+  )
 ```
 Interpretation: Some variables contain unrealistic negative values and missing values, indicating potential data quality issues which we cleaned in the data preparation before analysis.
 
